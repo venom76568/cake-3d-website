@@ -27,7 +27,7 @@ export function FeaturedSection() {
     <section
       id="featured"
       ref={ref}
-      className="w-full py-24 md:py-40 bg-pearl relative z-20"
+      className="w-full py-16 md:py-32 bg-pearl relative z-20"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Parallax Header */}

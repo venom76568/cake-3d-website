@@ -40,7 +40,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, ease: 'easeOut' }}
-          className="text-[14vw] leading-none font-display text-chocolate tracking-tighter mix-blend-multiply whitespace-nowrap"
+          className="text-[18vw] md:text-[14vw] leading-none font-display text-chocolate tracking-tighter mix-blend-multiply whitespace-nowrap"
         >
           ARTISAN
         </motion.h1>
@@ -48,7 +48,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.4, delay: 0.15, ease: 'easeOut' }}
-          className="text-[14vw] leading-none font-display text-chocolate tracking-tighter mix-blend-multiply whitespace-nowrap -mt-[5%]"
+          className="text-[18vw] md:text-[14vw] leading-none font-display text-chocolate tracking-tighter mix-blend-multiply whitespace-nowrap -mt-[5%]"
         >
           BAKERY
         </motion.h1>
@@ -59,7 +59,7 @@ export function HeroSection() {
           opacity-0 hides it; the TravelingCake renders the actual visible image at z-5 (just behind the z-20 text). */}
       <div
         id="hero-cake-anchor"
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] md:w-[45%] pointer-events-none opacity-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] md:w-[45%] pointer-events-none opacity-0"
         aria-hidden="true"
       >
         {/* Same image + dimensions as the TravelingCake so measurement is accurate */}
@@ -80,7 +80,7 @@ export function HeroSection() {
         {/* Top-left: slides in from top-left corner */}
         <motion.div
           style={{ y: topLeftY }}
-          className="absolute top-[0%] left-[-2%] w-[30%] md:w-[20%] pointer-events-none"
+          className="absolute top-[5%] left-[8%] w-[35%] md:w-[25%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: -25 }}
@@ -95,7 +95,7 @@ export function HeroSection() {
         {/* Top-right: slides in from top-right corner */}
         <motion.div
           style={{ y: topRightY }}
-          className="absolute top-[5%] right-[-2%] w-[32%] md:w-[22%] pointer-events-none"
+          className="absolute top-[10%] right-[8%] w-[38%] md:w-[28%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: 15 }}
@@ -110,7 +110,7 @@ export function HeroSection() {
         {/* Bottom-left: slides in from bottom-left corner */}
         <motion.div
           style={{ y: bottomLeftY }}
-          className="absolute bottom-[-5%] left-[-2%] w-[35%] md:w-[22%] pointer-events-none"
+          className="absolute bottom-[5%] left-[8%] w-[40%] md:w-[28%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: -10 }}
@@ -125,7 +125,7 @@ export function HeroSection() {
         {/* Bottom-right: slides in from bottom-right corner */}
         <motion.div
           style={{ y: bottomRightY }}
-          className="absolute bottom-[-2%] right-[-2%] w-[28%] md:w-[20%] pointer-events-none"
+          className="absolute bottom-[5%] right-[8%] w-[35%] md:w-[25%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: 20 }}

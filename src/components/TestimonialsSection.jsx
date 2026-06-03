@@ -26,7 +26,7 @@ export function TestimonialsSection() {
     <section
       id="reviews"
       ref={ref}
-      className="w-full py-24 md:py-40 relative z-20 overflow-hidden"
+      className="w-full py-16 md:py-32 relative z-20 overflow-hidden"
     >
       {/* Parallax background layer */}
       <motion.div

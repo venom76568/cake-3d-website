@@ -22,7 +22,7 @@ export function MenuSection() {
     <section
       id="menu"
       ref={ref}
-      className="w-full py-24 md:py-40 bg-cream relative z-20 border-t border-mist/50"
+      className="w-full py-16 md:py-32 bg-cream relative z-20 border-t border-mist/50"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Parallax Header */}
