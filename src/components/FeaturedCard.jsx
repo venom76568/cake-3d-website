@@ -13,11 +13,14 @@ export function FeaturedCard({ item }) {
       {item.layoutId ? (
         <div
           id="featured-cake-anchor"
-          className="w-[70%] z-10 relative mt-[-10%] aspect-[3/4] flex items-center justify-center pointer-events-none"
+          className="w-[70%] z-10 relative mt-[-10%] flex flex-col items-center justify-center pointer-events-none opacity-0"
           aria-hidden="true"
         >
-          {/* Subtle dashed ring: visible before the cake arrives, hidden once it lands */}
-          <div className="absolute inset-0 rounded-full border-2 border-dashed border-mist opacity-40" />
+          <img
+            src={item.image}
+            alt=""
+            className="w-full h-auto drop-shadow-2xl object-contain"
+          />
         </div>
       ) : (
         <div className="w-[70%] z-10 relative mt-[-10%] group-hover:scale-105 transition-transform duration-700 ease-out flex flex-col items-center justify-center">

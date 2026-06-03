@@ -76,15 +76,23 @@ export function TravelingCake() {
     const f = fromRef.current;
     const t = toRef.current;
     const scrollEnd = getScrollEnd();
+    const scrollStart = vhRef.current * 0.4;
+
+    if (v <= scrollStart) {
+      // Stay glued to the hero section (scrolls up naturally with the document)
+      return f.absTop - v;
+    }
 
     if (v >= scrollEnd) {
-      // Cake has landed — scroll with the featured card so it doesn't float
+      // Cake has landed — scroll with the featured card
       return t.absTop - v;
     }
 
-    // In-flight: linear interpolation hero → featured
-    const p = v / scrollEnd; // no clamping needed, v < scrollEnd here
-    return f.absTop + (t.absTop - scrollEnd - f.absTop) * p;
+    // In-flight: interpolate from scrollStart to scrollEnd
+    const startTop = f.absTop - scrollStart;
+    const endTop = t.absTop - scrollEnd;
+    const p = (v - scrollStart) / (scrollEnd - scrollStart);
+    return startTop + (endTop - startTop) * p;
   }, [getScrollEnd]));
 
   // Horizontal fixed position
@@ -92,7 +100,8 @@ export function TravelingCake() {
     const f = fromRef.current;
     const t = toRef.current;
     const scrollEnd = getScrollEnd();
-    const p = Math.max(0, Math.min(1, v / scrollEnd));
+    const scrollStart = vhRef.current * 0.4;
+    const p = Math.max(0, Math.min(1, (v - scrollStart) / (scrollEnd - scrollStart)));
     return f.left + (t.left - f.left) * p;
   }, [getScrollEnd]));
 
@@ -101,7 +110,8 @@ export function TravelingCake() {
     const f = fromRef.current;
     const t = toRef.current;
     const scrollEnd = getScrollEnd();
-    const p = Math.max(0, Math.min(1, v / scrollEnd));
+    const scrollStart = vhRef.current * 0.4;
+    const p = Math.max(0, Math.min(1, (v - scrollStart) / (scrollEnd - scrollStart)));
     return f.width + (t.width - f.width) * p;
   }, [getScrollEnd]));
 
