@@ -1,0 +1,116 @@
+Cake Shop
+Product Requirements Document (PRD)
+Version 1.0 | Premium Artisan Bakery Web Experience
+Document Type
+Product Requirements Document (PRD)
+Product Name
+Artisan Cake Shop — Interactive Web Experience
+Version
+1.0
+Status
+Draft — Ready for Development
+Tech Stack
+React 18 + Vite + Tailwind CSS + Framer Motion
+Target Platform
+Web (Desktop-first, Mobile Responsive)
+Framework
+ag-kit / Antigravity AI Coding Environment
+Deployment
+Vercel (Static Site)
+1. Executive Summary
+This document defines the complete product requirements for a premium, immersive single-page cake shop website. The product is designed to simulate a real 3D environment using parallax depth layering, Framer Motion physics animations, and scroll-triggered visual storytelling — without the overhead of a true WebGL/Three.js render engine.
+The core innovation is the 'living page' philosophy: every element breathes, floats, or responds to the user — creating the sensation of a physical bakery window that users can peer into. The website must convert visitors through aesthetic delight, not just information delivery.
+2. Problem Statement
+2.1 The Problem
+Static cake shop websites fail to communicate the artisanal quality of premium baked goods.
+Generic e-commerce templates commoditize premium products by placing them in the same visual context as discount alternatives.
+Mobile users expect sensory-rich experiences; flat product grids feel transactional, not aspirational.
+2.2 The Opportunity
+Immersive web experiences increase time-on-site, brand recall, and conversion rates for luxury/artisan food brands.
+React + Framer Motion enables cinema-quality animation at near-zero performance cost when implemented correctly.
+The ag-kit agent framework allows a single developer to orchestrate multi-specialist AI coding — dramatically compressing build time.
+3. Goals & Success Metrics
+3.1 Primary Goals
+Deliver a visually stunning, 'alive' website that makes every cake look irresistible.
+Achieve a fake-3D depth illusion using layered parallax, perspective transforms, and staggered float animations.
+Implement Framer Motion's advanced features: shared layout transitions (layoutId), scroll-driven reveals (whileInView), and spring physics.
+Maintain 60fps animation performance on all target devices.
+Complete full build using ag-kit workflow within the defined sprint timeline.
+3.2 Success Metrics
+Metric
+Target
+Lighthouse Performance Score
+>= 90 on desktop
+Animation Frame Rate
+60fps sustained
+LCP (Largest Contentful Paint)
+< 2.5 seconds
+Mobile Responsiveness
+All viewports >= 320px
+Accessibility (a11y)
+WCAG AA (prefers-reduced-motion respected)
+Build Completion
+Within 4-week sprint
+4. User Personas
+4.1 Primary Persona — 'The Celebration Planner'
+Age 28–45, event organizer, high disposable income
+Motivation: Finding a premium cake for a milestone event (wedding, corporate, birthday)
+Pain point: Cannot distinguish artisan quality from mass-produced through a generic website
+Behaviour: Scrolls slowly, lingers on hero imagery, reads testimonials
+4.2 Secondary Persona — 'The Impulse Browser'
+Age 22–35, casual social media user arriving from Instagram/Pinterest
+Motivation: Visual delight — came for the aesthetic, might order if the experience is compelling
+Pain point: Bounces immediately if the page feels slow or generic
+Behaviour: Fast scroller, expects instant visual payoff, converts on emotion
+5. Feature Requirements
+5.1 Section 1: Hero (P0 — Critical)
+Full-screen viewport, cream/rose warm background
+Centered bakery name in elegant serif display typography
+4 cake images floating in from screen corners on load (staggered delay)
+Each cake has: unique rotation angle, infinite Y-axis float animation
+2 topping images (berry, mint) floating at 1.4x speed — creates depth parallax
+All animations use spring physics or easeInOut — no linear easing
+Mobile: cakes reposition gracefully, reduce scale
+5.2 Section 2: Featured (P0 — Critical)
+Grid of 4 featured cake cards
+One slot is an 'empty plate' placeholder (dashed border, plate illustration)
+Hero cake (cake2) shares layoutId with its featured card — animates from hero to grid slot on scroll
+Both sections wrapped in a single LayoutGroup from framer-motion
+Transition: spring physics, ~0.6s duration
+5.3 Section 3: Menu (P1 — High)
+CSS grid of menu item cards (name, price, description, image)
+whileInView scroll reveal: opacity 0→1, y 40→0
+Staggered card delays: index * 0.1s
+once: true — animates only on first reveal
+Accepts menuItems prop array: { id, name, price, description, image }
+5.4 Section 4: Testimonials (P1 — High)
+3 review cards in horizontal row (column on mobile)
+CSS-only hover: -translate-y-3, shadow-2xl, transition-all duration-300
+No Framer Motion — pure Tailwind utility classes
+Data: quote, reviewer name, star rating
+5.5 Global / Navigation (P1 — High)
+Sticky navbar: bakery name + smooth scroll links
+Transparent on hero, solid on scroll (useScroll + motionValue)
+Full app wrapped in LayoutGroup for cross-section shared transitions
+6. Out of Scope (v1.0)
+Shopping cart / e-commerce checkout
+CMS or content management backend
+User accounts or order history
+Real-time inventory management
+Payment gateway integration
+These features are candidates for v2.0 after validating the brand experience.
+7. Constraints & Assumptions
+All product images are pre-generated with transparent backgrounds (.webp format)
+No backend server — pure static site deployed to Vercel
+Development uses ag-kit agent framework within Antigravity/Project IDX environment
+Single developer or small team — ag-kit orchestration is essential for velocity
+Framer Motion v10+ required for layoutId cross-section transitions
+8. Timeline
+Week 1
+Setup + Architecture: ag-kit init, /brainstorm, /plan, image asset prep
+Week 2
+Core Build: Hero + Featured sections (complex animation work)
+Week 3
+Menu + Testimonials + App assembly
+Week 4
+Polish: /enhance pass, mobile QA, accessibility, deploy to Vercel

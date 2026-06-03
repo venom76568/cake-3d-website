@@ -1,0 +1,204 @@
+Cake Shop
+UI/UX Flow & Design Specification
+Version 1.0 | Visual Design System + Interaction Patterns
+1. Design Philosophy
+The core aesthetic is Warm Artisan Luxury — the visual equivalent of walking past a high-end Parisian patisserie. The design system is built around three principles:
+Living First: Nothing is static. The page breathes. Every element that can float, floats. Every card that can lift, lifts.
+Depth Illusion: Parallax layering, scale differences, and z-index stacking create the perception of physical 3D space — without WebGL.
+Restrained Maximalism: Rich imagery and animation, but never chaotic. White space, elegant typography, and a warm neutral palette prevent sensory overload.
+2. Color System
+Swatch
+Name
+Hex Code
+Usage
+ 
+Cream White
+#FEFBF6
+Hero background, section backgrounds
+ 
+Warm Rose
+#FDE8D0
+Section dividers, card backgrounds
+ 
+Dusty Rose
+#FDA4AF
+Accent elements, hover highlights
+ 
+Deep Plum
+#4A1A3A
+Heading text, nav background
+ 
+Warm Gold
+#D4A853
+Price text, star ratings, CTA borders
+ 
+Chocolate
+#3D1A00
+Body text, dark overlays
+ 
+Pearl White
+#FFFFFF
+Card backgrounds, text on dark
+ 
+Mist Gray
+#F5F0EB
+Subtle card borders, dividers
+3. Typography System
+Role
+Font
+Size / Weight
+Usage
+Display
+Playfair Display
+72px / 700
+Hero bakery name
+Heading 1
+Playfair Display
+48px / 700
+Section titles
+Heading 2
+Playfair Display
+32px / 600
+Card titles, subsections
+Body
+DM Sans
+16px / 400
+Descriptions, menu copy
+Caption
+DM Sans
+13px / 400 italic
+Reviewer names, dates
+Price
+DM Sans
+20px / 700
+Menu prices, featured prices
+Nav Link
+DM Sans
+14px / 500
+Navbar navigation items
+4. Section-by-Section Design Specification
+Section 1: Hero — The Stage
+Background
+Radial gradient from cream #FEFBF6 (center) to warm rose #FDE8D0 (edges). Subtle noise texture overlay at 5% opacity for analog feel.
+Typography
+Bakery name: Playfair Display 72px bold, color #4A1A3A. Tagline: DM Sans 18px italic, color #8B5E52.
+Layout
+Full viewport height (100vh). Bakery name centered horizontally and vertically. Cakes positioned absolutely in four quadrants: top-left, top-right, bottom-left, bottom-right. Toppings scattered in mid-layer.
+Animations
+Mount: cakes spring in from off-screen corners (stiffness 80, damping 20, delay staggered 0-0.4s). Idle: infinite Y-float at 20px amplitude, 3s period. Toppings float at 2.2s period (appears closer). Bakery name: opacity fade-in at 0.5s delay.
+Hover States
+None — hero is animated, not interactive.
+Mobile Behaviour
+Cakes scale to 0.6x and reposition to tighter quadrants. Bakery name reduces to 48px. Toppings hidden on screens < 480px.
+Section 2: Featured — The Window Display
+Background
+Pure white #FFFFFF with a subtle drop shadow at top to visually separate from Hero.
+Typography
+Section title: 'Our Finest Creations' — Playfair Display 40px, centered. Card names: Playfair Display 22px. Prices: DM Sans 18px bold gold #D4A853.
+Layout
+2x2 CSS grid, max-width 960px, centered. Card padding 24px. Rounded corners 16px. Cards have drop shadow: 0 8px 32px rgba(0,0,0,0.12).
+Animations
+Slot 3 (Empty Plate): dashed border 2px #D4B8A0, plate image at 40% opacity. Hero cake (slot 1): layoutId='featured-hero-cake' — glides from Hero position into this slot via Framer Motion spring on scroll. Other cards: opacity whileInView fade.
+Hover States
+Cards scale subtly on hover (scale 1.02) via Tailwind hover:scale-102. Drop shadow intensifies: hover:shadow-2xl.
+Mobile Behaviour
+Single column, 100% width cards on mobile.
+Section 3: Menu — The Full Menu Board
+Background
+Warm cream #FEFBF6, consistent with hero. Optional: subtle diagonal stripe pattern at 3% opacity.
+Typography
+Section title: 'The Full Menu' — Playfair Display 40px, left-aligned. Card names: 20px Playfair Display. Descriptions: 14px DM Sans. Prices: 18px DM Sans bold gold.
+Layout
+3-column grid on desktop, 2-column on tablet, 1-column on mobile. Cards: 300px max-width, rounded-2xl, white background, shadow-md. Image takes top 60% of card.
+Animations
+whileInView: each card animates { opacity: 0→1, y: 40→0 } as it enters viewport. Stagger: delay = index * 0.1s. once: true. Easing: spring (stiffness 100, damping 20).
+Hover States
+Card lifts on hover: hover:-translate-y-2 hover:shadow-xl transition-all duration-300.
+Mobile Behaviour
+1-column grid below 640px. Images maintain 16:9 aspect ratio.
+Section 4: Testimonials — The Trust Layer
+Background
+Deep plum #4A1A3A background for contrast and luxury feel. Gold star icons on dark.
+Typography
+Section title: 'What Our Customers Say' — Playfair Display 36px white. Quote text: DM Sans 16px italic white/90. Reviewer: DM Sans 14px bold white.
+Layout
+3-column horizontal flex on desktop. Cards: width 300px, padding 32px, rounded-2xl, semi-transparent white background (rgba 255,255,255,0.08), subtle border rgba 255,255,255,0.15.
+Animations
+whileInView section container: opacity 0→1, duration 0.6s. Cards reveal simultaneously.
+Hover States
+Card lifts on hover: hover:-translate-y-3 hover:shadow-2xl hover:bg-white/15 transition-all duration-300. NO Framer Motion — pure Tailwind CSS.
+Mobile Behaviour
+Single column on mobile. Horizontal scroll on tablet (overflow-x: auto).
+Navbar
+Background
+Initially transparent (over hero). Transitions to rgba(254,251,246,0.95) with backdrop-blur-md and shadow-sm on scroll > 80px.
+Typography
+Bakery logo/name: Playfair Display 20px bold plum. Nav links: DM Sans 14px medium.
+Layout
+Sticky top-0 z-50. Flex row: logo left, links right. Links: Home, Featured, Menu, Contact. Links have smooth scroll behaviour.
+Animations
+Background opacity: useTransform(scrollY, [0, 100], [0, 0.95]). Logo: subtle scale from 1.1 to 1.0 on scroll.
+Hover States
+Links: hover:text-rose-400 transition-colors duration-200. Active link: text-gold underline.
+Mobile Behaviour
+Hamburger menu on mobile < 768px. Drawer slides in from right.
+5. Animation Timing System
+All animation values are derived from a consistent timing scale to ensure the page feels cohesive rather than chaotic.
+Animation
+Duration
+Easing
+Element
+Cake mount (corner entry)
+0.8s
+Spring s80 d20
+FloatingCake (mount)
+Cake idle float
+3.0s loop
+easeInOut mirror
+FloatingCake (idle)
+Topping idle float
+2.2s loop
+easeInOut mirror
+FloatingTopping (idle)
+Hero title fade
+0.6s
+easeOut
+HeroSection h1
+layoutId cake transition
+0.6s spring
+Spring s200 d30
+cake2 → FeaturedCard
+Menu card reveal
+0.4s stagger
+Spring s100 d20
+MenuItem (per card)
+Testimonials reveal
+0.6s
+easeOut
+TestimonialsSection
+Navbar solidify
+0.3s
+easeInOut
+Navbar (scroll-driven)
+Card hover lift
+0.3s
+ease-out (CSS)
+MenuItem, FeaturedCard
+Testimonial hover lift
+0.3s
+ease-out (CSS)
+TestimonialCard
+6. Spacing & Layout Grid
+Base spacing unit: 4px (Tailwind default)
+Section padding: py-24 (96px top/bottom) on desktop, py-16 on mobile
+Content max-width: 1200px, centered with mx-auto
+Card gap in grids: gap-8 (32px)
+Card internal padding: p-6 (24px)
+Hero: no max-width — full bleed
+7. Accessibility & Inclusive Design
+All interactive elements (nav links, any future buttons) have visible focus rings: focus:ring-2 focus:ring-rose-400
+Color contrast: all text meets WCAG AA minimum 4.5:1 against its background
+prefers-reduced-motion: all Framer Motion animations replaced with instant opacity change
+Alt text: all img elements have descriptive alt attributes (e.g. alt='Belgian Chocolate Ganache Cake')
+Star ratings include aria-label: aria-label='5 out of 5 stars'
+Testimonial cards are keyboard-accessible — focus triggers the same visual lift as hover

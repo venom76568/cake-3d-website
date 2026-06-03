@@ -1,0 +1,123 @@
+Cake Shop
+Application Flow Document
+Version 1.0 | User Journey & Interaction Model
+1. Page Load Flow
+The first 3 seconds of the user's experience are the most critical. This is the cinematic opening sequence — every animation is choreographed to build emotional impact before the user can scroll.
+1
+DNS Resolution + Bundle Load
+Vite serves the minified React bundle from Vercel CDN. WebP images are prefetched.
+Trigger: User navigates to URL
+Output: HTML shell renders, blank cream background visible
+|
+2
+React Hydration
+React mounts the component tree. LayoutGroup wraps the entire app. useScroll hook initialises.
+Trigger: Bundle executes
+Output: Component tree ready, Framer Motion context active
+|
+3
+Hero Entrance Sequence
+4 cake images animate in from corners simultaneously (spring physics, 0.8s). Bakery title fades in with 0.3s delay. Toppings enter after 0.6s.
+Trigger: Component mount
+Output: Hero section is fully animated and alive
+|
+4
+Infinite Float Loop Begins
+FloatingCake and FloatingTopping components enter their infinite Y-axis float loops. Different speeds create depth illusion.
+Trigger: Mount animation completes
+Output: Page is 'breathing' — the living-page state
+|
+5
+Navbar Initialises
+Sticky navbar is transparent over hero. useScroll listener is active.
+Trigger: Scroll position = 0
+Output: Nav visible but blended into hero
+|
+2. Scroll Journey Flow
+The user's scroll through the page is a narrative arc. Each section has a distinct emotional beat designed to move the user from 'discovering' to 'desiring' to 'trusting'.
+2.1 Scroll Position 0% — Hero
+Viewport: Full-screen hero with floating cakes
+Animation state: All floats active
+Navbar: Transparent
+Emotional beat: Wonder and delight
+2.2 Scroll Position ~25% — Navbar Transition
+Trigger: Scroll crosses hero fold
+Navbar: Transitions from transparent to solid cream/white with drop shadow
+Implementation: useScroll() + motionValue transform + useTransform hook
+const { scrollY } = useScroll();
+const navBg = useTransform(scrollY, [0, 100], ['rgba(255,251,245,0)', 'rgba(255,251,245,1)']);
+2.3 Scroll Position ~30-50% — Featured Section
+Trigger: FeaturedSection enters viewport (whileInView)
+Key animation: cake2 layoutId transition executes — hero cake glides into grid slot
+Duration: 0.6s spring physics
+Emotional beat: Magic — the user sees a cake 'arrive' at its display position
+Other 3 cards: fade in simultaneously with whileInView opacity reveal
+2.4 Scroll Position ~55-75% — Menu Section
+Trigger: Individual MenuItems enter viewport one by one
+Animation: Each card opacity 0->1, y 40->0, staggered by index * 0.1s
+once: true — cards don't re-animate on scroll-up
+Emotional beat: Discovery — users browse what they can order
+2.5 Scroll Position ~80-100% — Testimonials
+Trigger: Section enters viewport, whileInView fade on section container
+Hover state: CSS-only lift + shadow on each card
+No Framer Motion — pure Tailwind CSS transitions
+Emotional beat: Trust — social proof closes the conversion loop
+3. Interaction Event Map
+User Action
+Trigger
+Animation / Response
+Section
+Page loads
+onMount
+Cakes fly in from corners
+Hero
+Scroll down
+scrollY > 80px
+Navbar solidifies
+Global
+Featured enters viewport
+whileInView
+layoutId cake transition fires
+Featured
+Menu card enters view
+whileInView (per card)
+Staggered fade-up reveal
+Menu
+Hover testimonial card
+CSS :hover
+Lift -12px, shadow-2xl
+Testimonials
+Click nav link
+onClick + scrollIntoView
+Smooth scroll to section
+Navbar
+Tab through nav
+keyboard focus
+Focus ring visible (a11y)
+Navbar
+Reduced motion pref
+prefers-reduced-motion
+All floats disabled
+Global
+4. State Management Flow
+This app has minimal global state — no Redux, no Zustand. All state is local to components or derived from scroll position.
+Global State (App.jsx)
+  scrollY              // MotionValue from useScroll() — read-only
+  navbarOpacity        // Derived via useTransform(scrollY, ...)
+Local State (per component)
+  HeroSection          // No state — pure animation
+  FeaturedSection      // No state — layoutId is automatic
+  MenuSection          // No state — data from props
+  TestimonialsSection  // No state — static render
+The absence of state management overhead is intentional. The 'state' of this app IS the animation state managed internally by Framer Motion's layout engine. Fighting that with external state would cause conflicts and jank.
+5. Error & Edge Case Flows
+5.1 Image Load Failure
+If a cake image fails to load, show a styled placeholder (cream-colored box with subtle border)
+Animations continue — the motion system does not depend on image load success
+5.2 Slow Connection
+Skeleton screens are NOT implemented in v1.0 (images are lightweight WebP)
+Hero section uses CSS background-color immediately — no blank white flash
+Critical images (Hero cakes) are loaded eagerly; all others use loading='lazy'
+5.3 layoutId Conflict
+If two elements share the same layoutId without being in the same LayoutGroup tree, Framer Motion throws a console warning and falls back to individual animations
+Resolution: ensure LayoutGroup is at App root, wrapping ALL sections

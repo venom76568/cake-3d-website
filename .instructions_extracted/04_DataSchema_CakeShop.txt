@@ -1,0 +1,279 @@
+Cake Shop
+Data Schema & Backend Architecture
+Version 1.0 | Static Site Data Model + v2.0 Backend Roadmap
+1. v1.0 Data Architecture — Static Site
+This is a static single-page application. There is no database, no server, and no API calls at runtime. All data is defined as JavaScript module exports in /src/data/ and imported directly into React components at build time.
+This is not a limitation — it is a deliberate architectural choice. Static data means: zero latency data access, no CORS issues, no API rate limits, and trivial deployment. The data schema below defines the shape of these static JavaScript objects.
+2. Core Data Schemas
+2.1 MenuItem Schema
+Used by: MenuSection.jsx, FeaturedSection.jsx
+Field
+Type
+Required
+Description
+id
+string
+Yes
+Unique identifier e.g. 'cake-chocolate-001'
+name
+string
+Yes
+Display name: 'Belgian Chocolate Ganache'
+price
+number
+Yes
+Price in USD: 45.00
+priceDisplay
+string
+Yes
+Formatted: '$45.00' or 'From $45'
+description
+string
+Yes
+Short descriptor (< 80 chars)
+image
+string
+Yes
+Path from /public: '/images/cake1.webp'
+category
+string
+Yes
+Enum: 'signature' | 'seasonal' | 'custom'
+isFeatured
+boolean
+No
+If true, appears in FeaturedSection grid
+isHeroCake
+boolean
+No
+If true, shares layoutId with Hero section
+layoutId
+string
+No
+Must match the layoutId in HeroSection
+servings
+string
+No
+'Serves 8-10 people'
+tags
+string[]
+No
+['gluten-free', 'vegan', 'nut-free']
+Example static data:
+// /src/data/menuData.js
+export const menuItems = [
+  {
+    id: 'cake-chocolate-001',
+    name: 'Belgian Chocolate Ganache',
+    price: 65,
+    priceDisplay: 'From $65',
+    description: 'Rich Belgian chocolate with glistening ganache drip',
+    image: '/images/cake1.webp',
+    category: 'signature',
+    isFeatured: false,
+    isHeroCake: false,
+    tags: ['bestseller'],
+  },
+  // ... 7 more items
+];
+2.2 FeaturedItem Schema
+Used by: FeaturedSection.jsx. Extends MenuItem with layout transition data.
+Field
+Type
+Required
+Description
+...MenuItem
+extends
+Yes
+All MenuItem fields inherited
+isFeatured
+boolean
+Yes
+Must be true for all items in this array
+isHeroCake
+boolean
+Yes
+true for cake2 only — triggers layoutId
+layoutId
+string
+Conditional
+Required if isHeroCake is true
+slotIndex
+number
+Yes
+Grid position: 0, 1, 2 (slot 3 is empty plate)
+tagline
+string
+No
+Short marketing line: 'Our most-loved creation'
+// /src/data/featuredData.js
+export const featuredItems = [
+  { ...menuItems[0], isFeatured: true, isHeroCake: false, slotIndex: 0 },
+  {
+    ...menuItems[1],  // cake2.webp
+    isFeatured: true,
+    isHeroCake: true,
+    layoutId: 'featured-hero-cake',  // MUST MATCH HeroSection
+    slotIndex: 1,
+    tagline: 'The star of our window display'
+  },
+  { ...menuItems[2], isFeatured: true, isHeroCake: false, slotIndex: 2 },
+  // slotIndex 3 = EmptyPlate (auto-generated, no data entry needed)
+];
+2.3 Testimonial Schema
+Used by: TestimonialsSection.jsx
+Field
+Type
+Required
+Description
+id
+string
+Yes
+Unique: 'review-001'
+reviewerName
+string
+Yes
+Full name: 'Sarah Mitchell'
+reviewerRole
+string
+No
+'Bride, Oct 2024' or 'Corporate Client'
+avatar
+string
+No
+Path: '/images/avatar1.webp' (optional)
+quote
+string
+Yes
+Review text (< 150 chars for layout fit)
+stars
+number
+Yes
+Integer 1-5
+date
+string
+No
+Display date: 'October 2024'
+cakeOrdered
+string
+No
+Links to a MenuItem name (optional)
+// /src/data/testimonialsData.js
+export const testimonials = [
+  { id: 'review-001', reviewerName: 'Sarah Mitchell',
+    reviewerRole: 'Wedding, June 2024', stars: 5,
+    quote: 'The most beautiful cake we have ever seen. Our guests are still talking about it.' },
+  // ... 2 more
+];
+2.4 HeroCake Animation Config Schema
+Used by: HeroSection.jsx. Defines the visual and physics properties of each floating element.
+Field
+Type
+Required
+Description
+id
+string
+Yes
+'hero-cake-1' through 'hero-cake-4'
+src
+string
+Yes
+'/images/cake1.webp'
+initialX
+string
+Yes
+Off-screen: '-250px' | '110vw'
+initialY
+string
+Yes
+Off-screen: '-250px' | '110vh'
+finalX
+string
+Yes
+Final position: '5%' | '75%'
+finalY
+string
+Yes
+Final position: '10%' | '60%'
+rotate
+number
+Yes
+CSS rotation degrees: -15 to 15
+scale
+number
+Yes
+CSS scale for depth: 0.7 to 1.0
+floatAmplitude
+number
+Yes
+Float Y range in px: 20 for cakes
+floatDuration
+number
+Yes
+Float cycle seconds: 3.0 for cakes
+delay
+number
+Yes
+Mount stagger delay: 0.0 to 0.4s
+layoutId
+string
+No
+Only on cake matching FeaturedSection
+zIndex
+number
+Yes
+Stacking order: 10 to 40
+3. v2.0 Backend Architecture Roadmap
+If the business grows to require dynamic content management, the following backend architecture is recommended. This is out of scope for v1.0 but designed to be non-breaking — the React frontend would migrate from static imports to API calls with minimal refactoring.
+3.1 Recommended Stack
+Backend: Node.js + Express OR Next.js API routes
+Database: PostgreSQL (relational — products have categories, orders have line items)
+ORM: Prisma (type-safe, excellent migration tooling)
+Auth: NextAuth.js or Clerk (admin CMS access)
+Storage: Cloudinary (image CDN with WebP auto-conversion)
+Hosting: Vercel (frontend) + Railway or Supabase (backend/DB)
+3.2 v2.0 Database Schema (PostgreSQL / Prisma)
+model MenuItem {
+  id          String    @id @default(cuid())
+  name        String
+  price       Float
+  description String
+  imageUrl    String    // Cloudinary CDN URL
+  category    Category
+  isFeatured  Boolean   @default(false)
+  isHeroCake  Boolean   @default(false)
+  layoutId    String?
+  slotIndex   Int?
+  createdAt   DateTime  @default(now())
+}
+model Testimonial {
+  id           String   @id @default(cuid())
+  reviewerName String
+  quote        String
+  stars        Int
+  isPublished  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+enum Category { SIGNATURE SEASONAL CUSTOM WEDDING }
+3.3 v2.0 API Endpoints
+Method
+Endpoint
+Description
+GET
+/api/menu
+Returns all menu items, supports ?category= filter
+GET
+/api/featured
+Returns featured items + hero cake config
+GET
+/api/testimonials
+Returns published testimonials
+POST
+/api/admin/menu
+Create new menu item (admin auth required)
+PATCH
+/api/admin/menu/:id
+Update item (price, image, featured status)
+DELETE
+/api/admin/menu/:id
+Soft-delete item

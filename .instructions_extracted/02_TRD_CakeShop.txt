@@ -1,0 +1,151 @@
+Cake Shop
+Technical Requirements Document (TRD)
+Version 1.0 | Engineering Specification
+Category
+Specification
+Frontend Framework
+React 18.x (Functional Components + Hooks)
+Build Tool
+Vite 5.x — HMR, tree-shaking, ESM
+Styling
+Tailwind CSS 3.x (JIT mode) + custom config
+Animation Engine
+Framer Motion 11.x
+Node Version
+Node.js >= 18 LTS
+Package Manager
+npm >= 9.x
+Deployment
+Vercel (static build: dist/)
+AI Framework
+ag-kit via @vudovn/ag-kit (Project IDX / Antigravity)
+Image Format
+WebP with transparent backgrounds (.webp)
+Browser Support
+Chrome 90+, Firefox 90+, Safari 14+, Edge 90+
+1. Architecture Overview
+The application is a Single Page Application (SPA) built on Vite + React. There is no server-side rendering, no API layer, and no database. All data is static and co-located with the component tree. The architecture prioritizes render performance and animation throughput over data complexity.
+1.1 Component Hierarchy
+App.jsx                          // LayoutGroup wrapper, Router, Theme
+  Navbar.jsx                     // Sticky, scroll-aware, smooth-scroll links
+  HeroSection.jsx                // Full-screen, floating cakes, depth illusion
+    FloatingCake.jsx             // Individual cake: mount animation + infinite float
+    FloatingTopping.jsx          // Topping: faster float for depth
+  FeaturedSection.jsx            // Grid + layoutId shared transition target
+    FeaturedCard.jsx             // Individual card, layoutId receiver
+    EmptyPlate.jsx               // Placeholder slot with dashed border
+  MenuSection.jsx                // whileInView grid reveal
+    MenuItem.jsx                 // Individual staggered card
+  TestimonialsSection.jsx        // CSS-only hover cards
+    TestimonialCard.jsx          // Quote, reviewer, stars
+2. Dependency Specifications
+2.1 Core Dependencies
+Package
+Version
+Role
+react
+^18.3.0
+UI component rendering
+react-dom
+^18.3.0
+DOM binding for React
+framer-motion
+^11.0.0
+All animations: spring, layoutId, scroll
+tailwindcss
+^3.4.0
+Utility CSS classes (JIT)
+@tailwindcss/vite
+^4.0.0
+Vite Tailwind plugin
+vite
+^5.3.0
+Build tool and dev server
+3. Animation Architecture
+3.1 The 3D Illusion System
+True 3D is expensive. The fake-3D system creates depth perception using four layered techniques:
+Layer 1 — Background: Static gradient, no movement
+Layer 2 — Cakes (slow): Y-float at 20px amplitude, 3s period, rotate -15deg to +15deg
+Layer 3 — Toppings (fast): Y-float at 12px amplitude, 2.2s period — appears closer
+Layer 4 — UI Text: Static foreground, highest z-index
+The speed differential between layers 2 and 3 creates the parallax depth cue. Combined with CSS perspective-based scale differences (cakes in corners appear smaller = farther away), this produces genuine 3D perception.
+3.2 FloatingCake Props Interface
+interface FloatingCakeProps {
+  src: string;              // Image path: /images/cake1.webp
+  initialX: string;         // Off-screen start: '-200px' | '200px'
+  initialY: string;         // Off-screen start: '-200px' | '200px'
+  finalX: string;           // Final resting X position
+  finalY: string;           // Final resting Y position
+  rotate: number;           // Static CSS rotation (degrees)
+  floatAmplitude: number;   // Y-float range (px) — cakes: 20, toppings: 12
+  floatDuration: number;    // Full float cycle (s) — cakes: 3.0, toppings: 2.2
+  layoutId?: string;        // Set on hero cake that shares with Featured
+  delay?: number;           // Mount animation stagger delay (s)
+}
+3.3 layoutId Transition Specification
+cake2.webp in HeroSection must have layoutId='featured-hero-cake'
+The matching FeaturedCard must also have layoutId='featured-hero-cake'
+Both must be descendants of a single LayoutGroup in App.jsx
+Transition config: { type: 'spring', stiffness: 200, damping: 30, duration: 0.6 }
+AnimatePresence is NOT needed for this pattern — LayoutGroup handles it
+whileInView on FeaturedSection triggers the layout transition when section enters viewport
+4. Performance Requirements
+4.1 Animation Performance Rules
+Only animate transform and opacity — never width, height, top, left (causes reflow)
+All animated elements must have will-change: transform set via CSS
+Use translateY() for float animations — GPU composited
+No layout-affecting Framer Motion props: never animate padding, margin, or border
+Lazy-load images below the fold: loading='lazy' on all non-hero images
+4.2 Image Optimization
+Format: WebP (60-80% smaller than PNG with equivalent quality)
+Hero cakes: max 400x400px source resolution
+Menu cards: max 300x300px source resolution
+All images: transparent background, pre-cropped to subject
+Total image payload budget: < 800KB
+5. Accessibility Requirements
+prefers-reduced-motion: all float animations disabled, layoutId transitions reduced to opacity-only
+All img tags require descriptive alt attributes
+Navbar links are keyboard-navigable (focus rings visible)
+Color contrast: minimum 4.5:1 ratio for all text
+Star ratings must include aria-label (e.g. '5 out of 5 stars')
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const floatProps = prefersReducedMotion ? {} : { animate: { y: [0, -20, 0] }, ... };
+6. File & Folder Structure
+/cake-shop
+  /public
+    /images
+      cake1.webp  cake2.webp  cake3.webp  cake4.webp
+      cake5.webp  cake6.webp  cake7.webp  cake8.webp
+      berry.webp  mint.webp  plate.webp
+  /src
+    /components
+      Navbar.jsx          FloatingCake.jsx   FloatingTopping.jsx
+      HeroSection.jsx     FeaturedSection.jsx  FeaturedCard.jsx
+      EmptyPlate.jsx      MenuSection.jsx    MenuItem.jsx
+      TestimonialsSection.jsx  TestimonialCard.jsx
+    /data
+      menuData.js         featuredData.js    testimonialsData.js
+    /hooks
+      useScrollNavbar.js  // Tracks scroll for sticky navbar
+    App.jsx
+    main.jsx
+    index.css
+  vite.config.js
+  tailwind.config.js
+  .agent/              // ag-kit framework files
+7. Tailwind Configuration
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        cream: { 50: '#FEFBF6', 100: '#FEF7ED', 200: '#FDE8C8' },
+        rose:  { 100: '#FFE4E6', 300: '#FDA4AF', 500: '#F43F5E' },
+        warm:  { 50: '#FFFBF5', gold: '#D4A853' }
+      },
+      fontFamily: { serif: ['Playfair Display', 'Georgia', 'serif'],
+                    sans:  ['DM Sans', 'system-ui', 'sans-serif'] },
+      boxShadow: { cake: '0 25px 60px -10px rgba(0,0,0,0.25), 0 10px 20px -5px rgba(0,0,0,0.15)' }
+    }
+  }
+}

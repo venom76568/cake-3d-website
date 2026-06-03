@@ -1,0 +1,166 @@
+Cake Shop
+Implementation Plan
+Version 1.0 | 4-Week Sprint | ag-kit Workflow
+Phase 0: Environment Setup (Day 1)
+Before a single component is written, the environment must be correctly configured. Skip any of these steps and you will spend hours debugging environment issues instead of building.
+0.1 Project Scaffold
+# Create Vite + React project
+npm create vite@latest cake-shop -- --template react
+cd cake-shop
+# Install dependencies
+npm install framer-motion
+npm install -D tailwindcss @tailwindcss/vite
+# Install ag-kit into project
+npx @vudovn/ag-kit init
+0.2 Tailwind Configuration
+# vite.config.js — add Tailwind plugin
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+})
+0.3 Image Asset Preparation
+Generate all 8 cake images + 2 toppings + plate using the prompts in this project's PRD
+Save as .webp format with transparent backgrounds
+Place ALL images in /public/images/
+Verify filenames: cake1.webp through cake8.webp, berry.webp, mint.webp, plate.webp
+Test: open each image in browser — confirm no white background
+Phase 1: Architecture Planning via ag-kit (Day 1-2)
+The /brainstorm and /plan commands produce the architectural scaffold. Do not skip these — they set constraints that every subsequent build prompt respects.
+Prompt 1.1 — Brainstorm:
+/brainstorm
+I want to build a single-page premium cake shop in React + Tailwind CSS + Framer Motion. Sections: Hero (floating cakes, fake 3D), Featured (layoutId shared transition), Menu (whileInView stagger), Testimonials (CSS hover). What component structure and animation strategy should I use to achieve a cinematic, living-page feel?
+Prompt 1.2 — Plan:
+/plan
+Create a sequenced development plan for the cake shop. Components: HeroSection, FloatingCake, FloatingTopping, FeaturedSection, FeaturedCard, EmptyPlate, MenuSection, MenuItem, TestimonialsSection, TestimonialCard, Navbar. Output a week-by-week task list.
+Phase 2: Week-by-Week Build Plan
+Week 1: Setup + Hero Section + Featured Section
+Task
+ag-kit Command
+Deliverable
+Environment setup
+Manual
+Vite + React running locally
+ag-kit init
+npx ag-kit init
+.agent/ folder present
+Image assets prep
+Manual (AI gen)
+11 WebP files in /public/images/
+Architecture planning
+/brainstorm + /plan
+Component tree + task list
+HeroSection build
+@frontend-specialist
+Floating cakes animate in, infinite float
+FloatingCake component
+@frontend-specialist
+Reusable with all animation props
+FeaturedSection build
+@frontend-specialist
+layoutId transition working
+Week 2: Menu Section + Testimonials + Global Shell
+Task
+ag-kit Command
+Deliverable
+MenuSection + MenuItem
+@frontend-specialist
+whileInView stagger reveal
+Static menu data
+Manual
+/src/data/menuData.js complete
+TestimonialsSection
+@frontend-specialist
+CSS-only hover lift effect
+App.jsx assembly
+/create
+All sections composed + LayoutGroup wrap
+Navbar with scroll
+@frontend-specialist
+Transparent-to-solid on scroll
+useScrollNavbar hook
+@frontend-specialist
+Scroll-aware hook extracted
+Week 3: Debug + Polish Pass
+Task
+ag-kit Command
+Deliverable
+layoutId debug
+/debug
+Transition is smooth, no jank
+Mobile responsiveness
+/enhance
+All breakpoints pass (320px+)
+Animation performance
+/enhance
+Only transform/opacity animated
+Reduced motion a11y
+/enhance
+prefers-reduced-motion respected
+Image optimization
+Manual
+Total image payload < 800KB
+Cross-browser test
+Manual
+Chrome, Firefox, Safari pass
+Week 4: Deploy + Final QA
+Task
+ag-kit Command
+Deliverable
+Vercel config
+/deploy
+Build: npm run build, Output: dist/
+Lighthouse audit
+Manual
+Performance >= 90 on desktop
+Final visual QA
+Manual
+All sections pixel-perfect
+README documentation
+Manual
+Setup instructions written
+Phase 3: Key ag-kit Prompts (Full Library)
+These are the exact prompts to use at each build step. Copy-paste into your ag-kit environment.
+Hero Section
+Build HeroSection:
+Use the @frontend-specialist agent.
+
+Build HeroSection.jsx. Full-screen viewport, cream/rose warm gradient background. Centered bakery name in Playfair Display serif, large and elegant. Accept props for 4 cake images (cake1-4.webp) and 2 topping images (berry.webp, mint.webp).
+
+Each cake: initial position off-screen corner, spring animation to final position on mount (stiffness: 80, damping: 20), static CSS rotate per cake (-15, 8, -8, 12 degrees), infinite Y-axis float (amplitude 20px, 3s period, easeInOut, repeatType mirror).
+
+Toppings: float at 1.4x speed of cakes for depth illusion. cake2.webp must have layoutId='featured-hero-cake'. Stagger mount delays: 0, 0.1, 0.2, 0.3s.
+
+Fully responsive — cakes scale down and reposition on mobile. Respect prefers-reduced-motion.
+Featured Section
+Build FeaturedSection:
+Use the @frontend-specialist agent.
+
+Build FeaturedSection.jsx with Framer Motion layoutId shared transition. Grid of 4 slots: 3 featured cake cards + 1 EmptyPlate placeholder (slot index 3) with dashed border and subtle plate image.
+
+cake2.webp card must have layoutId='featured-hero-cake' matching HeroSection. Wrap both sections in a single LayoutGroup in App.jsx. Spring transition: stiffness 200, damping 30, duration 0.6s. whileInView on section container triggers the transition when entering viewport.
+
+Output FeaturedSection component AND the exact changes needed in HeroSection.
+Menu Section
+Build MenuSection:
+Use the @frontend-specialist agent.
+
+Build MenuSection.jsx. CSS grid of MenuItem cards (name, price, description, image). Each card: whileInView={{ opacity: 1, y: 0 }}, initial={{ opacity: 0, y: 40 }}, viewport={{ once: true, amount: 0.2 }}. Stagger via transition={{ delay: index * 0.1 }}.
+
+Accept menuItems prop: { id, name, price, description, image }. Tailwind for grid and card styling. Cards should look premium: rounded-2xl, white background, subtle drop shadow.
+Testimonials Section
+Build TestimonialsSection:
+Use the @frontend-specialist agent.
+
+Build TestimonialsSection.jsx with 3 review cards. NO Framer Motion — Tailwind CSS only. Hover state: -translate-y-3, shadow-2xl, transition-all duration-300 ease-out. Cards: rounded-2xl, white bg, subtle border. Accept testimonials prop: { id, reviewerName, quote, stars }. Stars as filled/empty circles or simple text display. Responsive: row on desktop, column on mobile.
+Phase 4: Debug & Enhancement Prompts
+Debug layoutId transition:
+/debug
+The layoutId transition between HeroSection cake2.webp and its FeaturedSection card is janky. The cake jumps to position rather than smoothly animating. Diagnose: 1) Is LayoutGroup correctly wrapping both sections? 2) Are there conflicting CSS position values? 3) Is AnimatePresence interfering? Fix and output corrected code.
+Enhance for performance:
+/enhance
+Review the full cake shop app for: (1) Animation performance — only transform and opacity should be animated, no layout-triggering properties. Add will-change: transform to all floating elements. (2) Mobile — cakes should not overflow viewport on screens < 768px. (3) prefers-reduced-motion — disable all infinite float animations. Wrap in a custom useReducedMotion hook. (4) Image lazy loading — all non-hero images should have loading='lazy'.
+Deploy to Vercel:
+/deploy
+Deploy this Vite + React static site to Vercel. Build command: npm run build. Output directory: dist. Ensure all WebP image assets in /public are included in the build output. Generate vercel.json if any routing config is needed.
