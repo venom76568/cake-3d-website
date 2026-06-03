@@ -59,7 +59,7 @@ export function FeaturedSection() {
           {featuredData.map((item, index) => (
             <motion.div
               key={item.id}
-              style={{ y: cardYTransforms[index] }}
+              style={{ y: item.isPlaceholder ? 0 : cardYTransforms[index] }}
               className={index % 2 !== 0 ? 'sm:mt-24' : ''}
             >
               {item.isPlaceholder ? (
