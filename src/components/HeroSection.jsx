@@ -16,7 +16,6 @@ export function HeroSection() {
   const toppingY1     = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
   const toppingY2     = useTransform(scrollYProgress, [0, 1], ['0%', '35%']);
   const toppingY3     = useTransform(scrollYProgress, [0, 1], ['0%', '-20%']);
-  const toppingY4     = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const indicatorY    = useTransform(scrollYProgress, [0, 0.3], ['0%', '60%']);
   const indicatorOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
 
@@ -29,7 +28,7 @@ export function HeroSection() {
   return (
     <section
       ref={ref}
-      className="relative w-full h-screen flex items-center justify-center bg-cream overflow-hidden"
+      className="relative w-full h-[75svh] md:h-screen flex items-center justify-center bg-cream overflow-hidden"
     >
       {/* ── TYPOGRAPHY — z-20: sits above corner cakes (z-10) and TravelingCake at rest (z-5) ── */}
       <motion.div
@@ -80,7 +79,7 @@ export function HeroSection() {
         {/* Top-left: slides in from top-left corner */}
         <motion.div
           style={{ y: topLeftY }}
-          className="absolute top-[5%] left-[8%] w-[35%] md:w-[25%] pointer-events-none"
+          className="absolute top-[12%] left-[12%] md:top-[5%] md:left-[8%] w-[28%] md:w-[20%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: -25 }}
@@ -95,7 +94,7 @@ export function HeroSection() {
         {/* Top-right: slides in from top-right corner */}
         <motion.div
           style={{ y: topRightY }}
-          className="absolute top-[10%] right-[8%] w-[38%] md:w-[28%] pointer-events-none"
+          className="absolute top-[18%] right-[12%] md:top-[10%] md:right-[8%] w-[30%] md:w-[22%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: 15 }}
@@ -110,7 +109,7 @@ export function HeroSection() {
         {/* Bottom-left: slides in from bottom-left corner */}
         <motion.div
           style={{ y: bottomLeftY }}
-          className="absolute bottom-[5%] left-[8%] w-[40%] md:w-[28%] pointer-events-none"
+          className="absolute bottom-[18%] left-[12%] md:bottom-[5%] md:left-[8%] w-[32%] md:w-[22%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: -10 }}
@@ -125,7 +124,7 @@ export function HeroSection() {
         {/* Bottom-right: slides in from bottom-right corner */}
         <motion.div
           style={{ y: bottomRightY }}
-          className="absolute bottom-[5%] right-[8%] w-[35%] md:w-[25%] pointer-events-none"
+          className="absolute bottom-[18%] right-[12%] md:bottom-[5%] md:right-[8%] w-[28%] md:w-[20%] pointer-events-none"
         >
           <motion.div
             style={{ rotate: 20 }}
@@ -144,7 +143,7 @@ export function HeroSection() {
           <FloatingTopping
             src="/images/strawberry.webp"
             alt="Floating Strawberry"
-            className="w-20 md:w-32 top-[10%] left-[20%] drop-shadow-lg opacity-60 blur-[2px]"
+            className="w-20 md:w-32 top-[22%] left-[40%] md:top-[15%] md:left-[35%] drop-shadow-lg opacity-60 blur-[2px]"
             delay={0.4}
             floatDuration={4}
             yRange={['-8%', '8%']}
@@ -154,7 +153,7 @@ export function HeroSection() {
           <FloatingTopping
             src="/images/gold_flakes.webp"
             alt="Gold Flakes"
-            className="w-16 md:w-28 bottom-[15%] left-[35%] opacity-40 blur-[3px]"
+            className="w-16 md:w-28 bottom-[20%] left-[50%] md:bottom-[12%] opacity-40 blur-[3px] -translate-x-1/2"
             delay={0.6}
             floatDuration={5}
           />
@@ -165,7 +164,7 @@ export function HeroSection() {
           <FloatingTopping
             src="/images/mint_leaf.webp"
             alt="Floating Mint Leaf"
-            className="w-16 md:w-24 top-[50%] right-[15%] drop-shadow-md opacity-50 blur-[1px]"
+            className="w-16 md:w-24 top-[35%] right-[12%] md:top-[38%] md:right-[15%] drop-shadow-md opacity-50 blur-[1px]"
             delay={0.5}
             floatDuration={3.5}
             yRange={['-12%', '12%']}
@@ -178,24 +177,11 @@ export function HeroSection() {
           <FloatingTopping
             src="/images/chocolate_curl.webp"
             alt="Floating Chocolate Curl"
-            className="w-20 md:w-32 top-[40%] left-[12%] drop-shadow-lg opacity-60 blur-[2px]"
+            className="w-20 md:w-32 top-[35%] left-[12%] md:top-[38%] md:left-[15%] drop-shadow-lg opacity-60 blur-[2px]"
             delay={0.7}
             floatDuration={4.5}
             yRange={['-6%', '6%']}
             rotateRange={[-8, 8]}
-          />
-        </motion.div>
-
-        <motion.div style={{ y: toppingY4 }} className="absolute inset-0 pointer-events-none">
-          {/* Sprinkles Mix — right of strawberry */}
-          <FloatingTopping
-            src="/images/sprinkles_mix.webp"
-            alt="Floating Sprinkles Mix"
-            className="w-24 md:w-40 top-[12%] left-[45%] opacity-40 blur-[4px]"
-            delay={0.9}
-            floatDuration={3}
-            yRange={['-10%', '10%']}
-            rotateRange={[-20, 20]}
           />
         </motion.div>
       </div>
